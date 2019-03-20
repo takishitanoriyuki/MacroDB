@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MacroDB.Models;
+using MacroDB.Response;
 
 namespace MacroDB.Controllers
 {
@@ -26,9 +27,20 @@ namespace MacroDB.Controllers
 
         // GET: Nutrient
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NutrientModel>>> GetNutrientModels()
+        public async Task<ActionResult<IEnumerable<Nutrient>>> GetNutrientModels()
         {
-            return await _context.nutrients.ToListAsync();
+            List<Nutrient> result = new List<Nutrient>();
+            IEnumerable<NutrientModel> ret = await _context.nutrients.ToListAsync();
+            foreach(NutrientModel item in ret){
+                Nutrient nutrient = new Nutrient();
+                nutrient.name = item.name;
+                nutrient.protein = item.protein;
+                nutrient.lipid = item.lipid;
+                nutrient.carbohydrate = item.carbohydrate;
+                nutrient.calorie = item.calorie;
+                result.Add(nutrient);
+            }
+            return result;
         }
 
     }
