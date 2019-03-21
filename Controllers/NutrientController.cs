@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MacroDB.Models;
 using MacroDB.Response;
+using Microsoft.AspNetCore.Http;
 
 namespace MacroDB.Controllers
 {
@@ -27,7 +28,7 @@ namespace MacroDB.Controllers
 
         // GET: Nutrient
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Nutrient>>> GetNutrientModels()
+        public async Task<ActionResult<IEnumerable<Nutrient>>> GetNutrient()
         {
             List<Nutrient> result = new List<Nutrient>();
             IEnumerable<NutrientModel> ret = await _context.nutrients.ToListAsync();
@@ -43,5 +44,21 @@ namespace MacroDB.Controllers
             return result;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> PostNutrient(Nutrient item){
+            NutrientModel model = new NutrientModel();
+            DateTime dt = DateTime.Now;
+            model.name = item.name;
+            model.protein = item.protein;
+            model.lipid = item.lipid;
+            model.carbohydrate = item.carbohydrate;
+            model.calorie = item.calorie;
+            model.created_at = dt;
+            model.updated_at = dt;
+
+            _context.nutrients.Add(model);
+            await _context.SaveChangesAsync();
+            return Created(nameof(PostNutrient), new object());
+        }
     }
 }
