@@ -20,10 +20,6 @@ namespace MacroDB.Controllers
         public NutrientController(NutrientContext context)
         {
             _context = context;
-
-            if(context.nutrients.Count() == 0){
-
-            }
         }
 
         // GET: Nutrient
@@ -34,6 +30,7 @@ namespace MacroDB.Controllers
             IEnumerable<NutrientModel> ret = await _context.nutrients.ToListAsync();
             foreach(NutrientModel item in ret){
                 Nutrient nutrient = new Nutrient();
+                nutrient.id = item.id;
                 nutrient.name = item.name;
                 nutrient.protein = item.protein;
                 nutrient.lipid = item.lipid;
@@ -58,7 +55,23 @@ namespace MacroDB.Controllers
 
             _context.nutrients.Add(model);
             await _context.SaveChangesAsync();
-            return Created(nameof(PostNutrient), new object());
+            return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> PutNutrient(Nutrient item){
+            NutrientModel model = await _context.nutrients.FindAsync(new object[]{item.id});
+            DateTime dt = DateTime.Now;
+            model.name = item.name;
+            model.protein = item.protein;
+            model.lipid = item.lipid;
+            model.carbohydrate = item.carbohydrate;
+            model.calorie = item.calorie;
+            model.updated_at = dt;
+
+            _context.nutrients.Update(model);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
