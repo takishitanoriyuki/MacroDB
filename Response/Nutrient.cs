@@ -1,5 +1,6 @@
 namespace MacroDB.Response{
     public class Nutrient{
+        public int id {get; set;}
         public string name {get; set;}
         
         public float protein {get; set;}
