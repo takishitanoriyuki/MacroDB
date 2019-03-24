@@ -60,7 +60,10 @@ namespace MacroDB.Controllers
 
         [HttpPut]
         public async Task<ActionResult> PutNutrient(Nutrient item){
-            NutrientModel model = await _context.nutrients.FindAsync(new object[]{item.id});
+            NutrientModel model = await _context.nutrients.FindAsync(item.id);
+            if(model == null){
+                return NotFound();
+            }
             DateTime dt = DateTime.Now;
             model.name = item.name;
             model.protein = item.protein;
@@ -73,5 +76,16 @@ namespace MacroDB.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteNutrient(int id){
+            NutrientModel model = await _context.nutrients.FindAsync(id);
+            if(model == null){
+                return NotFound();
+            }
+            _context.nutrients.Remove(model);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }        
     }
 }
