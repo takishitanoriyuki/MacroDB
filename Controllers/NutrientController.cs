@@ -29,14 +29,16 @@ namespace MacroDB.Controllers
             List<Nutrient> result = new List<Nutrient>();
             IEnumerable<NutrientModel> ret = await _context.nutrients.ToListAsync();
             foreach(NutrientModel item in ret){
-                Nutrient nutrient = new Nutrient();
-                nutrient.id = item.id;
-                nutrient.name = item.name;
-                nutrient.protein = item.protein;
-                nutrient.lipid = item.lipid;
-                nutrient.carbohydrate = item.carbohydrate;
-                nutrient.calorie = item.calorie;
-                result.Add(nutrient);
+                if(item.approval == true){
+                    Nutrient nutrient = new Nutrient();
+                    nutrient.id = item.id;
+                    nutrient.name = item.name;
+                    nutrient.protein = item.protein;
+                    nutrient.lipid = item.lipid;
+                    nutrient.carbohydrate = item.carbohydrate;
+                    nutrient.calorie = item.calorie;
+                    result.Add(nutrient);
+                }
             }
             return result;
         }
