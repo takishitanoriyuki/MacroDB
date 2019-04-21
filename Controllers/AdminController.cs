@@ -63,5 +63,20 @@ namespace MacroDB.Controllers
             }
             return result;
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutAdmin(int id){
+            NutrientModel model = await _context.nutrients.FindAsync(id);
+            if(model == null){
+                return NotFound();
+            }
+            DateTime dt = DateTime.Now;
+            model.approval = true;
+            model.approvaled_at = dt;
+
+            _context.nutrients.Update(model);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
