@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MacroDB.Models;
 using MacroDB.Request;
 using MacroDB.Response;
-using Microsoft.AspNetCore.Http;
-using System.Security.Cryptography;
-using System.Text;
+using MacroDB.Util;
 
 namespace MacroDB.Controllers
 {
@@ -45,7 +46,7 @@ namespace MacroDB.Controllers
 
                 // トークンを生成する
                 DateTime dt = DateTime.Now;
-                model.token = createToken();
+                model.token = Token.createToken();
                 model.token_update = dt;
                 model.last_login = dt;
                 db.management.Update(model);
@@ -69,23 +70,6 @@ namespace MacroDB.Controllers
                 result.Append(b.ToString("x2"));
             }
             return result.ToString();
-        }
-
-        /**
-         * トークンを生成する
-         */
-        private string createToken()
-        {
-            byte[] token = new byte[16];
-            RNGCryptoServiceProvider gen = new RNGCryptoServiceProvider();
-            gen.GetBytes(token);
-
-            StringBuilder buf = new StringBuilder();
-            for (int i = 0; i < token.Length; i++)
-            {
-                buf.AppendFormat("{0:x2}", token[i]);
-            }
-            return buf.ToString();
         }
     }
 }
