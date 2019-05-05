@@ -35,12 +35,6 @@ namespace MacroDB
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "localhost";   // update me
-                builder.UserID = "SA";              // update me
-                builder.Password = "taki_0416";      // update me
-                builder.InitialCatalog = "MacroDB";
-            services.AddDbContext<NutrientContext>(options => options.UseSqlServer(builder.ConnectionString));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

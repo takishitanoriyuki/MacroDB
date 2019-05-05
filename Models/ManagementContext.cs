@@ -7,12 +7,7 @@ namespace MacroDB.Models{
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "localhost";   // update me
-                builder.UserID = "SA";              // update me
-                builder.Password = "taki_0416";      // update me
-                builder.InitialCatalog = "MacroDB";
-            optionsBuilder.UseSqlServer(builder.ConnectionString);
+            optionsBuilder.UseSqlServer(ConnectionBuilder.GetConnectionString());
         }
 
         public DbSet<ManagementModel> management { get; set; }

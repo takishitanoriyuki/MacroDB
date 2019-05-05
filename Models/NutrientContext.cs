@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace MacroDB.Models{
     public class NutrientContext : DbContext
     {
-        public NutrientContext(DbContextOptions<NutrientContext> options)
-            : base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseSqlServer(ConnectionBuilder.GetConnectionString());
         }
 
         public DbSet<NutrientModel> nutrients { get; set; }
