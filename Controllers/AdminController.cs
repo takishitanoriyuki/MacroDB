@@ -84,6 +84,27 @@ namespace MacroDB.Controllers
             return result;
         }
 
+        [HttpDelete]
+        public async Task<ActionResult<AdminDeleteResponse>> DeleteAdmin(AdminDeleteRequest request){
+            if(!(await checkToken(request.username, request.token))){
+                return BadRequest();
+            }
+
+            AdminDeleteResponse result = new AdminDeleteResponse();
+            using(var db = new NutrientContext())
+            {
+                NutrientModel model = await db.nutrients.FindAsync(request.id);
+                if(model == null){
+                    return NotFound();
+                }
+                db.nutrients.Remove(model);
+                await db.SaveChangesAsync();
+
+                result.token = await updateToken(request.username);
+            }
+            return result;
+        }
+
         public async Task<bool> checkToken(string username, string token){
             using(var db = new ManagementContext())
             {
