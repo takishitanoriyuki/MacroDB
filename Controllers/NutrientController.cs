@@ -22,14 +22,20 @@ namespace MacroDB.Controllers
 
         // GET: Nutrient
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NutrientGetResponse>>> GetNutrient()
+        public async Task<ActionResult<IEnumerable<NutrientGetResponse>>> GetNutrient(string word)
         {
             List<NutrientGetResponse> result = new List<NutrientGetResponse>();
             using(var db = new NutrientContext())
             {
-                IEnumerable<NutrientModel> ret = await db.nutrients
-                                                        .Where(x => x.approval == true)
-                                                        .ToListAsync();
+                var dbset = db.nutrients
+                                .Where(x => x.approval == true);
+
+                if(word != null){
+                    dbset = dbset.Where(x => x.name.Contains(word));
+                }
+                var ret = await dbset.OrderBy(x => x.name)
+                                    .ToListAsync();
+
                 foreach(NutrientModel item in ret){
                     NutrientGetResponse nutrient = new NutrientGetResponse();
                     nutrient.id = item.id;
